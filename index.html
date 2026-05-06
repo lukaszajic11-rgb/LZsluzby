@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>360° finanční péče | Lukáš Zajíček</title>
+  <style>
+    :root {
+      --navy: #061a33;
+      --navy-2: #0b2748;
+      --gold: #c99735;
+      --gold-light: #e4bd69;
+      --cream: #f8f5ef;
+      --white: #ffffff;
+      --text: #102033;
+      --muted: #667085;
+      --line: #e8dfcf;
+      --shadow: 0 18px 40px rgba(6, 26, 51, 0.10);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      background: linear-gradient(180deg, #fff 0%, var(--cream) 100%);
+      color: var(--text);
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    .hero {
+      background: radial-gradient(circle at top right, rgba(201,151,53,.22), transparent 35%), linear-gradient(135deg, var(--navy), #020814);
+      color: white;
+      border-radius: 32px;
+      padding: 54px;
+      min-height: 420px;
+      display: grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap: 34px;
+      align-items: center;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .eyebrow {
+      color: var(--gold-light);
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-size: 14px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(38px, 6vw, 68px);
+      line-height: 1.02;
+      margin: 0 0 24px;
+      letter-spacing: -0.04em;
+    }
+
+    .hero p {
+      font-size: 20px;
+      line-height: 1.55;
+      color: rgba(255,255,255,.84);
+      max-width: 640px;
+      margin: 0 0 34px;
+    }
+
+    .hero-badges {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .badge {
+      border: 1px solid rgba(228,189,105,.35);
+      border-radius: 18px;
+      padding: 18px;
+      background: rgba(255,255,255,.04);
+      backdrop-filter: blur(8px);
+      font-size: 15px;
+      line-height: 1.35;
+    }
+
+    .badge .icon { color: var(--gold-light); font-size: 26px; display: block; margin-bottom: 8px; }
+
+    .quote {
+      border-left: 3px solid var(--gold);
+      padding-left: 24px;
+      font-size: 24px;
+      line-height: 1.35;
+      color: rgba(255,255,255,.9);
+      font-style: italic;
+    }
+
+    .nav-tabs {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      margin: 22px 0 32px;
+      padding: 10px;
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 8px;
+      box-shadow: 0 10px 28px rgba(6,26,51,.06);
+    }
+
+    .nav-tabs button {
+      border: 0;
+      border-radius: 15px;
+      padding: 13px 12px;
+      background: transparent;
+      color: var(--navy);
+      font-weight: 800;
+      cursor: pointer;
+      transition: .2s ease;
+      font-size: 14px;
+    }
+
+    .nav-tabs button:hover,
+    .nav-tabs button.active {
+      background: var(--navy);
+      color: white;
+    }
+
+    .section {
+      display: none;
+      background: rgba(255,255,255,.86);
+      border: 1px solid var(--line);
+      border-radius: 32px;
+      padding: 36px;
+      box-shadow: var(--shadow);
+      margin-bottom: 32px;
+    }
+
+    .section.active { display: block; }
+
+    .section-head {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      color: var(--navy);
+      font-size: clamp(28px, 4vw, 42px);
+      letter-spacing: -0.03em;
+    }
+
+    .section-head p {
+      color: var(--gold);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-weight: 700;
+      margin: 10px 0 0;
+    }
+
+    .service-card {
+      display: grid;
+      grid-template-columns: 120px 210px 1fr 230px;
+      gap: 24px;
+      align-items: center;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 18px;
+      margin-bottom: 14px;
+      transition: .2s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 30px rgba(6,26,51,.08);
+    }
+
+    .service-icon {
+      width: 96px;
+      height: 96px;
+      border-radius: 18px;
+      background: linear-gradient(145deg, var(--navy), #020814);
+      color: var(--gold-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 44px;
+      font-weight: 700;
+    }
+
+    .service-title {
+      font-size: 23px;
+      font-weight: 900;
+      color: var(--navy);
+      text-transform: uppercase;
+      line-height: 1.18;
+    }
+
+    .service-subtitle {
+      display: block;
+      color: var(--gold);
+      font-size: 15px;
+      margin-top: 6px;
+      font-weight: 800;
+    }
+
+    .service-text {
+      font-size: 16px;
+      line-height: 1.55;
+      color: #1f2937;
+    }
+
+    .benefit {
+      border-left: 1px solid var(--line);
+      padding-left: 22px;
+      color: var(--navy);
+      font-size: 16px;
+      line-height: 1.45;
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .check {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--gold);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+    }
+
+    .why {
+      margin-top: 26px;
+      background: linear-gradient(135deg, var(--navy), #020814);
+      color: white;
+      border-radius: 24px;
+      padding: 28px;
+    }
+
+    .why h3 {
+      text-align: center;
+      margin: 0 0 22px;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+    }
+
+    .why-item {
+      border-right: 1px solid rgba(228,189,105,.35);
+      padding-right: 18px;
+    }
+
+    .why-item:last-child { border-right: 0; }
+    .why-item strong { display: block; margin-bottom: 8px; color: white; }
+    .why-item span { color: rgba(255,255,255,.75); font-size: 14px; line-height: 1.45; }
+
+    .contact-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 26px;
+      padding: 28px;
+      margin-top: 24px;
+      align-items: center;
+    }
+
+    .contact-box h3 { margin: 0 0 10px; color: var(--navy); font-size: 24px; }
+    .contact-box p { margin: 0; color: var(--muted); line-height: 1.55; }
+
+    .cta {
+      text-align: center;
+      border-left: 1px solid var(--line);
+      padding-left: 24px;
+    }
+
+    .cta .quote-text {
+      font-size: 22px;
+      color: var(--navy);
+      line-height: 1.35;
+      margin-bottom: 18px;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: var(--gold);
+      color: white;
+      padding: 14px 24px;
+      border-radius: 999px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .04em;
+      margin-top: 10px;
+    }
+
+    .footer {
+      text-align: center;
+      color: var(--gold);
+      font-weight: 800;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      padding: 28px 0 0;
+    }
+
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; padding: 34px; }
+      .hero-badges { grid-template-columns: 1fr; }
+      .nav-tabs { grid-template-columns: 1fr; position: static; }
+      .service-card { grid-template-columns: 86px 1fr; }
+      .service-icon { width: 72px; height: 72px; font-size: 32px; }
+      .service-text, .benefit { grid-column: 1 / -1; }
+      .benefit { border-left: 0; padding-left: 0; }
+      .why-grid { grid-template-columns: 1fr; }
+      .why-item { border-right: 0; border-bottom: 1px solid rgba(228,189,105,.25); padding-bottom: 14px; }
+      .contact-box { grid-template-columns: 1fr; }
+      .cta { border-left: 0; padding-left: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div>
+        <div class="eyebrow">Moje finanční péče</div>
+        <h1>Chytrá finanční řešení pro vaše cíle a klid</h1>
+        <p>Pomáhám lidem dělat správná finanční rozhodnutí. Srozumitelně, lidsky a s ohledem na dlouhodobý přínos.</p>
+        <div class="hero-badges">
+          <div class="badge"><span class="icon">◎</span>Osobní přístup na prvním místě</div>
+          <div class="badge"><span class="icon">☏</span>Online i telefonicky, kdykoliv vám to vyhovuje</div>
+          <div class="badge"><span class="icon">🤝</span>Dlouhodobé vztahy založené na důvěře</div>
+        </div>
+      </div>
+      <div class="quote">„Naslouchám, ptám se, rozumím a hledám řešení, které dává smysl vám.“</div>
+    </section>
+
+    <nav class="nav-tabs" aria-label="Navigace služeb">
+      <button class="active" onclick="showSection('bydleni', this)">1. Bydlení</button>
+      <button onclick="showSection('ochrana', this)">2. Ochrana</button>
+      <button onclick="showSection('investice', this)">3. Investice</button>
+      <button onclick="showSection('ostatni', this)">4. Ostatní</button>
+      <button onclick="showSection('servis', this)">5. Servis</button>
+    </nav>
+
+    <section id="bydleni" class="section active">
+      <div class="section-head"><h2>1. Bydlení & velké finanční rozhodnutí</h2><p>Řešení, která vám pomohou dosáhnout vašich cílů</p></div>
+      <div id="bydleni-list"></div>
+      <div class="why"><h3>Proč spolupracovat právě se mnou?</h3><div class="why-grid"><div class="why-item"><strong>Naslouchám a ptám se</strong><span>Neprodávám – hledám řešení pro vaši situaci, potřeby a cíle.</span></div><div class="why-item"><strong>Zjednodušuji složité</strong><span>Vysvětlím vše lidsky a srozumitelně, bez zbytečných pojmů.</span></div><div class="why-item"><strong>Myslím dlouhodobě</strong><span>Hledám řešení, která dávají smysl teď i v budoucnu.</span></div><div class="why-item"><strong>Jsem tu pro vás</strong><span>Online, telefonicky i osobně – vždy tak, jak vám to vyhovuje.</span></div></div></div>
+    </section>
+
+    <section id="ochrana" class="section">
+      <div class="section-head"><h2>2. Ochrana příjmů, majetku a života</h2><p>Ochrana, která vám dá klid a jistotu do každé situace</p></div>
+      <div id="ochrana-list"></div>
+      <div class="why"><h3>Proč mít pojištění nastavené se mnou?</h3><div class="why-grid"><div class="why-item"><strong>Analýza na míru</strong><span>Probereme vaši situaci a nastavíme jen to, co má skutečný smysl.</span></div><div class="why-item"><strong>Srovnám a vyberu</strong><span>Pracuji s více pojišťovnami a najdu ideální poměr ceny a krytí.</span></div><div class="why-item"><strong>Pomoc i po uzavření</strong><span>Když se něco stane, postarám se o vše za vás a budu na vaší straně.</span></div><div class="why-item"><strong>Průběžná kontrola</strong><span>Vaše životní situace se mění, proto řešení pravidelně upravuji.</span></div></div></div>
+    </section>
+
+    <section id="investice" class="section">
+      <div class="section-head"><h2>3. Tvorba majetku & finanční nezávislost</h2><p>Investujte dnes pro lepší zítřky</p></div>
+      <div id="investice-list"></div>
+      <div class="why"><h3>Proč investovat se mnou?</h3><div class="why-grid"><div class="why-item"><strong>Investice s cílem</strong><span>Nastavíme jasný cíl a strategii, která vás k němu dovede.</span></div><div class="why-item"><strong>Široká diverzifikace</strong><span>Vybíráme investice tak, aby byl váš majetek rozložený a odolnější.</span></div><div class="why-item"><strong>Bezpečí a kontrola</strong><span>Pravidelně sledujeme vývoj a přizpůsobujeme strategii aktuální situaci.</span></div><div class="why-item"><strong>Partner na dlouhou cestu</strong><span>Jsem tu pro vás dnes, zítra i za 10 let.</span></div></div></div>
+    </section>
+
+    <section id="ostatni" class="section">
+      <div class="section-head"><h2>4. Ostatní služby</h2><p>Doplňkové služby, které šetří čas, peníze i starosti</p></div>
+      <div id="ostatni-list"></div>
+      <div class="why"><h3>Proč využívat i tyto služby se mnou?</h3><div class="why-grid"><div class="why-item"><strong>Úspora času</strong><span>Vyřídím za vás to, co je složité a zdlouhavé.</span></div><div class="why-item"><strong>Úspora peněz</strong><span>Díky lepším podmínkám a nastavení snížíme zbytečné náklady.</span></div><div class="why-item"><strong>Jistota a klid</strong><span>Mám zkušenosti a zázemí, na které se můžete spolehnout.</span></div><div class="why-item"><strong>Dlouhodobé partnerství</strong><span>Neřeším jen dnešek, pomáhám budovat stabilní budoucnost.</span></div></div></div>
+    </section>
+
+    <section id="servis" class="section">
+      <div class="section-head"><h2>5. Servis & navázané spolupráce</h2><p>Spolehliví partneři, na které se můžete spolehnout</p></div>
+      <div id="servis-list"></div>
+      <div class="why"><h3>Proč využít naše partnery?</h3><div class="why-grid"><div class="why-item"><strong>Ověření partneři</strong><span>Spolupracujeme pouze s prověřenými odborníky.</span></div><div class="why-item"><strong>Úspora času a energie</strong><span>Vyřídíme za vás to, co je složité a časově náročné.</span></div><div class="why-item"><strong>Finančně výhodné</strong><span>Díky spolupráci získáte lepší podmínky a více hodnoty.</span></div><div class="why-item"><strong>Komplexní servis</strong><span>Vše řešíte snadno, přehledně a pod jednou střechou.</span></div></div></div>
+    </section>
+
+    <section class="contact-box">
+      <div>
+        <h3>Komunikace, která vám šetří čas i starosti</h3>
+        <p>Většinu věcí vyřešíme online nebo po telefonu. Flexibilně, efektivně a bez zbytečných schůzek.</p>
+      </div>
+      <div class="cta">
+        <div class="quote-text">„Mým cílem není jen vyřešit jednu věc, ale být vaším dlouhodobým partnerem pro vaše finance.“</div>
+        <a class="cta-button" href="mailto:email@domena.cz">Ozvěte se mi</a>
+      </div>
+    </section>
+
+    <div class="footer">♡ Finance s rozumem. Vztahy s důvěrou. Výsledky s dopadem.</div>
+  </main>
+
+  <script>
+    const data = {
+      bydleni: [
+        ['⌂', 'Hypotéka', '', 'Pomůžu vám nastavit hypotéku tak, aby dávala smysl nejen dnes, ale hlavně dlouhodobě do budoucna. Neřeším jen sazbu, ale celkové fungování financí, aby vás bydlení zbytečně nestresovalo.', 'Nižší splátka, jistota a kontrola nad penězi'],
+        ['◷', 'Úvěr ze stavebního spoření', '', 'Vhodné řešení hlavně pro rekonstrukce, menší financování nebo situace, kdy hypotéka není ideální cesta. Společně nastavíme variantu, která bude finančně rozumná a bezpečná.', 'Rychlejší dostupnost financí a flexibilní podmínky'],
+        ['▦', 'Konsolidace', '', 'Pomůžu vám spojit více závazků do jednoho přehledného řešení, aby finance byly jednodušší a lépe zvládnutelné. Cílem není jen nižší splátka, ale větší klid a kontrola nad penězi.', 'Jasný přehled a nižší měsíční zatížení'],
+        ['🛒', 'Spotřebitelský úvěr', '', 'Když potřebujete financovat větší životní krok, hledám řešení, které dává smysl a zbytečně vás nepřeplatí. Důležité je pro mě nastavit úvěr tak, aby vás v budoucnu neomezoval.', 'Správné financování bez skrytých překvapení'],
+        ['▣', 'Komerční úvěr', '', 'Pomáhám podnikatelům a firmám najít financování, které podpoří růst podnikání a nebude brzdit cashflow. Každý projekt řeším individuálně podle plánů, možností a dlouhodobé strategie klienta.', 'Podpora růstu a zdravé cashflow vašeho podnikání'],
+        ['↗', 'Úvěr na podnikání', '', 'Financování šité na míru vašemu podnikání – ať už chcete rozjet nový projekt, investovat do vybavení nebo překlenout náročnější období. Nastavíme řešení, které vás bude posouvat vpřed.', 'Financování, které dává smysl vašim cílům']
+      ],
+      ochrana: [
+        ['♛', 'Životní pojištění', '', 'Pomůžu vám nastavit ochranu tak, aby vaše rodina zvládla i situace, které se v životě nedají naplánovat. Důležité pro mě je, aby pojištění dávalo smysl vám, vašim závazkům i životní situaci.', 'Jistota pro vaše blízké a ochrana vašich závazků'],
+        ['🏃', 'Úrazové pojištění pro sportovce', '', 'Aktivní život a sport přinášejí větší riziko zranění, které může ovlivnit práci, příjem i běžné fungování. Nastavím ochranu tak, aby vám pomohla zvládnout výpadek i návrat zpět do formy.', 'Finanční jistota při úrazu a rychlejší návrat do života'],
+        ['⌂', 'Pojištění majetku', '', 'Domov bývá jedna z největších hodnot, které člověk buduje. Pomůžu vám nastavit ochranu nemovitosti i domácnosti tak, aby vás případná škoda finančně neohrozila.', 'Ochrana vašeho domova a všeho, co je pro vás důležité'],
+        ['♙', 'Pojištění odpovědnosti', 'osobní, zaměstnanecká', 'Někdy stačí malá chyba a škoda může být výrazně dražší, než člověk čeká. Pomůžu vám nastavit ochranu pro běžný život, zaměstnání i podnikání tak, aby vás podobné situace zbytečně finančně nezatížily.', 'Ochrana vás i vašeho podnikání před nečekanými škodami'],
+        ['🚗', 'Pojištění aut', '', 'Auto dnes většina lidí potřebuje každý den pro práci i osobní život. Nastavím pojištění tak, aby chránilo nejen vozidlo, ale hlavně váš klid při nečekaných situacích na silnici.', 'Klid na cestách a ochrana vás i vašeho vozidla'],
+        ['🐾', 'Pojištění mazlíčků', '', 'Veterinární péče bývá čím dál dražší a nečekané komplikace mohou přijít kdykoliv. Pomůžu vám nastavit ochranu, díky které budete řešit hlavně zdraví svého mazlíčka, ne vysoké výdaje.', 'Kvalitní péče pro vašeho mazlíčka bez finančních obav'],
+        ['✈', 'Cestovní pojištění', '', 'Na cestách člověk nikdy neví, co se může stát, a právě v zahraničí bývají komplikace nejdražší. Pomůžu vám nastavit pojištění podle typu cesty, aby vás dovolená nebo pracovní cesta nestála zbytečné starosti.', 'Pohodové cestování bez starostí a nepříjemných překvapení']
+      ],
+      investice: [
+        ['①', 'Jednorázová investice do 1 milionu Kč', '', 'Pomůžu vám nastavit investici tak, aby peníze neležely zbytečně na účtu a zároveň odpovídaly vašim cílům i vztahu k riziku. Důležité je pro mě vytvořit strategii, která bude dlouhodobě fungovat a dá vám větší finanční klid.', 'Zhodnocení financí s ohledem na vaše cíle a toleranci k riziku'],
+        ['◇', 'Jednorázová investice nad 1 milion Kč', 'fondy kvalifikovaných investorů', 'U většího kapitálu hledáme pokročilejší investiční možnosti, které mohou nabídnout širší diverzifikaci a zajímavější potenciál zhodnocení. Vše řešíme individuálně podle vašich plánů, zkušeností a dlouhodobé strategie.', 'Přístup k pokročilejším investičním příležitostem'],
+        ['↗', 'Pravidelná investice', '', 'Pravidelné investování je jeden z nejefektivnějších způsobů, jak dlouhodobě budovat majetek a finanční rezervu. Pomůžu vám nastavit systém, který bude jednoduchý, udržitelný a přizpůsobený vašim možnostem i budoucím cílům.', 'Budování majetku krok za krokem']
+      ],
+      ostatni: [
+        ['🐷', 'Penzijní spoření', '', 'Pomůžu vám připravit se na budoucnost tak, aby si člověk jednou udržel svůj životní standard i bez aktivního příjmu. Důležité je nastavit řešení chytře, pravidelně a s využitím všech dostupných výhod od státu i zaměstnavatele.', 'Státní příspěvek, daňové výhody a finanční jistota na stáří'],
+        ['€', 'Převody měn', 'Cyrus FX', 'Při převodech větších částek do zahraničí často lidé zbytečně přichází o peníze na kurzech a poplatcích. Pomůžu vám zajistit výhodnější směnu i rychlejší převody pro osobní finance, investice nebo podnikání.', 'Výhodnější kurzy, nižší poplatky a bezpečné mezinárodní převody'],
+        ['✓', 'Pomoc při pojistné události', 'EUCS', 'Když se něco stane, většina lidí neví, co přesně dělat a jak správně komunikovat s pojišťovnou. Pomůžu vám celý proces zvládnout rychleji, jednodušeji a s maximální podporou při řešení škody.', 'Odborná pomoc od A do Z a větší šance na férové vyřízení'],
+        ['🚗', 'Leasing', '', 'Pomůžu vám nastavit financování auta nebo vybavení tak, aby dávalo smysl vašemu rozpočtu i plánům do budoucna. Důležité je pro mě najít řešení, které nebude zbytečně zatěžovat vaše finance ani podnikání.', 'Flexibilní financování bez zbytečného zatížení'],
+        ['👥', 'Firemní benefity', 'pro zaměstnance i zaměstnavatele', 'Dobře nastavené benefity pomáhají firmám udržet kvalitní lidi a zaměstnancům přinášejí reálnou hodnotu. Pomůžu nastavit systém, který bude výhodný pro obě strany a dlouhodobě funkční.', 'Spokojenější zaměstnanci, vyšší motivace a daňové výhody']
+      ],
+      servis: [
+        ['⌕', 'Reality', 'nákup nemovitosti', 'Koupě nemovitosti je jedno z největších rozhodnutí v životě, a proto je důležité mít vedle sebe někoho, kdo celý proces pohlídá. Pomůžu vám propojit financování, realitní servis i celkové nastavení tak, aby vše dávalo smysl a proběhlo co nejvíce v klidu.', 'Kompletní servis od financování po předání klíčů'],
+        ['SOLD', 'Reality', 'prodej nemovitosti', 'Při prodeji nejde jen o cenu, ale i o správnou strategii, prezentaci a bezpečný průběh celého procesu. Pomůžu vám propojit ověřené specialisty tak, aby prodej proběhl efektivně, bezpečně a s maximálním výsledkem.', 'Maximální výsledek za nejlepších možných podmínek'],
+        ['🔑', 'Reality', 'pronájem nemovitosti', 'Pronájem může být zajímavý zdroj příjmu, pokud je správně nastavený a dobře spravovaný. Pomůžu vám zajistit celý proces tak, aby byl co nejjednodušší a dlouhodobě fungoval bez zbytečných komplikací.', 'Spolehliví nájemníci a právně správně nastavené smlouvy'],
+        ['▤', 'Daňové poradenství', '', 'Daně jsou oblast, kde správné nastavení dokáže ušetřit hodně peněz i starostí. Propojuji klienty s ověřenými specialisty, kteří pomohou najít efektivní a dlouhodobě udržitelné řešení.', 'Optimalizace daní, úspora nákladů a aktuální legislativa'],
+        ['🏃', 'Sportovní klinika', 'při zranění', 'Zranění může výrazně ovlivnit sport, práci i běžný život, a právě rychlé řešení bývá klíčové. Pomůžu vám propojit se specialisty, kteří pomáhají sportovcům i aktivním lidem vrátit se co nejrychleji zpět do běžného fungování.', 'Rychlé objednání, komplexní péče a návrat zpět do formy']
+      ]
+    };
+
+    function renderServices(sectionKey) {
+      const target = document.getElementById(sectionKey + '-list');
+      target.innerHTML = data[sectionKey].map(item => `
+        <article class="service-card">
+          <div class="service-icon">${item[0]}</div>
+          <div class="service-title">${item[1]}${item[2] ? `<span class="service-subtitle">${item[2]}</span>` : ''}</div>
+          <div class="service-text">${item[3]}</div>
+          <div class="benefit"><span class="check">✓</span><span>${item[4]}</span></div>
+        </article>
+      `).join('');
+    }
+
+    Object.keys(data).forEach(renderServices);
+
+    function showSection(id, btn) {
+      document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelectorAll('.nav-tabs button').forEach(button => button.classList.remove('active'));
+      btn.classList.add('active');
+      window.scrollTo({ top: document.querySelector('.nav-tabs').offsetTop - 10, behavior: 'smooth' });
+    }
+  </script>
+</body>
+</html>
